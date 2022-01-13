@@ -77,3 +77,51 @@ class Sunday(Matcher):
             return self.shift[c]
         else:
             return len(self.pattern) + 1
+
+
+class Horspool(Matcher):
+
+    def __init__(self, pattern):
+        super(Horspool, self).__init__(pattern)
+        self.last_chars = self.__last_chars(pattern)
+
+    def match(self, text):
+        matches = list()
+
+        i = 0
+        while i <= len(text) - len(self.pattern):
+            j = len(self.pattern) - 1
+
+            while j >= 0 and text[i + j] == self.pattern[j]:
+                j -= 1
+
+            if j == -1:
+                matches.append(i)
+                i += 1
+            else:
+                i += self.__shift(text[i + j], j)
+
+        return matches
+
+    @staticmethod
+    def __last_chars(pattern):
+        last_chars = dict()
+
+        for i in range(1, len(pattern)):
+            chars = dict()
+
+            for j in range(i):
+                chars[pattern[j]] = j
+
+            last_chars[i] = chars
+
+        return last_chars
+
+    def __shift(self, c, j):
+        if j not in self.last_chars.keys():
+            return j + 1
+
+        if c not in self.last_chars.get(j).keys():
+            return j + 1
+
+        return j - self.last_chars.get(j).get(c)

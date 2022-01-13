@@ -14,5 +14,6 @@ setup(
     author='yangdian',
     author_email='2406616734@qq.com',
     keywords='strmatch, stringmatching, sunday,horspool',
+    packages=find_packages(),
     python_requires='>=3.6, <4',
 )
